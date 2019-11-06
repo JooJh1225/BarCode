@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="BarCode.TimerSet"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BarCode"
+             mc:Ignorable="d" 
+             d:DesignHeight="30" d:DesignWidth="70">
+    <Grid>
+        <StackPanel Orientation="Horizontal" Height="30">
+            <Button Width="20" Content="-" FontWeight="Bold" VerticalContentAlignment="Center" Click="Button_Click"/>
+            <TextBox Name="tbox" Width="30" Text="{Binding TimerDouble, UpdateSourceTrigger=PropertyChanged}"/>
+            <Button Width="20" Content="+" FontWeight="Bold" VerticalContentAlignment="Center" Click="Button_Click_1" />
+        </StackPanel>     
+    </Grid>
+</UserControl>

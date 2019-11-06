@@ -7,28 +7,30 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="576" Width="1024">
     <Grid>
-        <StackPanel>
-            <ScrollViewer HorizontalScrollBarVisibility="Hidden">
-                <DataGrid Height="400" Width="163" HorizontalAlignment="Right" ItemsSource="{Binding BarCodeList}" AutoGenerateColumns="False" CanUserAddRows="False" HorizontalScrollBarVisibility="Hidden">
-                    <DataGrid.Columns>
-                        <DataGridTemplateColumn Header="BarCode" Width="60">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Image Source="{Binding Bitimg}" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTextColumn Header="BarCodeText" Binding="{Binding BarCodeText}">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="FontWeight" Value="Light"/>
-                                    <Setter Property="TextAlignment" Value="Center"/>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
-                    </DataGrid.Columns>
-                </DataGrid>
-            </ScrollViewer>            
+        <StackPanel Orientation="Horizontal">
+            <StackPanel Width="600">
+                <Button Width="100" Height="40" Command="{Binding ButtonClk}" CommandParameter="{Binding TimerDouble}" HorizontalAlignment="Left" />
+                <local:TimerSet/>
+            </StackPanel>
+            <DataGrid Height="400" Width="163" HorizontalAlignment="Right" ItemsSource="{Binding BarCodeList}" AutoGenerateColumns="False" CanUserAddRows="False" HorizontalScrollBarVisibility="Hidden">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="BarCode" Width="60">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image Source="{Binding Bitimg}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="BarCodeText" Binding="{Binding BarCodeText}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="FontWeight" Value="Light" />
+                                <Setter Property="TextAlignment" Value="Center" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
         </StackPanel>
     </Grid>
 </Window>
