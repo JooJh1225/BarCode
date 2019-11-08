@@ -6,31 +6,26 @@
         xmlns:local="clr-namespace:BarCode"
         mc:Ignorable="d"
         Title="MainWindow" Height="576" Width="1024">
+    <Window.Resources>
+        <local:MainViewModel x:Key="mviewmodel"/>
+    </Window.Resources>
     <Grid>
         <StackPanel Orientation="Horizontal">
-            <StackPanel Width="600">
-                <Button Width="100" Height="40" Command="{Binding ButtonClk}" CommandParameter="{Binding TimerDouble}" HorizontalAlignment="Left" />
-                <local:TimerSet/>
+            <StackPanel Width="70">
+                <Button Content="start" Width="70" Height="20" Command="{Binding ButtonClk}" CommandParameter="{Binding TimerDouble}" HorizontalAlignment="Left" />
+                <local:TimerSet Width="70" HorizontalAlignment="Left"/>
+                <Button Content="stop" Width="70" Height="20" Command="{Binding StopTimer}" HorizontalAlignment="Left"/>
+                <TextBox Text="{Binding BarcodeLength, UpdateSourceTrigger=PropertyChanged}" Height="20"/>
+                <ComboBox ItemsSource="{Binding BarcodeFormats}" DisplayMemberPath="Item2" FontSize="11" SelectedValue="{Binding SelectedBarcode}" SelectedValuePath="Item1"/>
             </StackPanel>
-            <DataGrid Height="400" Width="163" HorizontalAlignment="Right" ItemsSource="{Binding BarCodeList}" AutoGenerateColumns="False" CanUserAddRows="False" HorizontalScrollBarVisibility="Hidden">
-                <DataGrid.Columns>
-                    <DataGridTemplateColumn Header="BarCode" Width="60">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Image Source="{Binding Bitimg}" />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="BarCodeText" Binding="{Binding BarCodeText}">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="FontWeight" Value="Light" />
-                                <Setter Property="TextAlignment" Value="Center" />
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-                </DataGrid.Columns>
-            </DataGrid>
+            <StackPanel Width="70">
+                <Label Height="20"/>
+                <TextBlock Height="20" Text="반복 주기(ms)" FontSize="10" TextAlignment="Center"/>
+                <Label Height="20"/>
+                <TextBlock Text="바코드 길이" FontSize="10" TextAlignment="Center" Height="20"/>
+                <TextBlock Height="20" Text="바코드 타입" FontSize="10" TextAlignment="Center"/>
+            </StackPanel>
+            <local:MyDataGrid/>
         </StackPanel>
     </Grid>
 </Window>

@@ -7,9 +7,9 @@
              mc:Ignorable="d" 
              d:DesignHeight="30" d:DesignWidth="70">
     <Grid>
-        <StackPanel Orientation="Horizontal" Height="30">
+        <StackPanel Orientation="Horizontal" Height="20">
             <Button Width="20" Content="-" FontWeight="Bold" VerticalContentAlignment="Center" Click="Button_Click"/>
-            <TextBox Name="tbox" Width="30" Text="{Binding TimerDouble, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Name="tbox" Width="30" Text="{Binding TimerDouble, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Center"/>
             <Button Width="20" Content="+" FontWeight="Bold" VerticalContentAlignment="Center" Click="Button_Click_1" />
         </StackPanel>     
     </Grid>
