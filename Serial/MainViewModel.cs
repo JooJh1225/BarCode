@@ -1,18 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using System.Collections.Generic;
 using ZXing;
 
 namespace BarCode
 {
     internal class MainViewModel : INotifyPropertyChanged
     {
-
-
         public DispatcherTimer timer = new DispatcherTimer();
 
         public BarCodeControl bc = new BarCodeControl();
@@ -23,19 +21,45 @@ namespace BarCode
         {
             new Tuple<BarcodeFormat, string>(BarcodeFormat.QR_CODE, "QRCode"),
             new Tuple<BarcodeFormat, string>(BarcodeFormat.CODE_128, "CODE128"),
-            new Tuple<BarcodeFormat, string>(BarcodeFormat.CODE_39, "CODE39")
-            //BarcodeFormat.CODE_128,
-            //BarcodeFormat.EAN_13,
-            //BarcodeFormat.CODE_39
+            new Tuple<BarcodeFormat, string>(BarcodeFormat.CODE_39, "CODE39"),
+            new Tuple<BarcodeFormat, string>(BarcodeFormat.EAN_13, "EAN13")
         };
+
+        private bool barcodeLengthReadonlyBool;
+
+        private bool barcodeTextReadonlyBool;
+
+        private bool randomCheckBoxBool;
 
         private ObservableCollection<model> barCodeList = new ObservableCollection<model>();
 
         private Double timerDouble;
 
-        private int barcodeLength;
+        private string barcodeLength;
 
         private BarcodeFormat selectedBarcode;
+
+        private string barcodeText;
+
+        public bool BarcodeLengthReadonlyBool
+        {
+            get { return barcodeLengthReadonlyBool; }
+            set
+            {
+                barcodeLengthReadonlyBool = value;
+                OnPropertyChanged(nameof(BarcodeLengthReadonlyBool));
+            }
+        }
+
+        public bool BarcodeTextReadonlyBool
+        {
+            get { return barcodeTextReadonlyBool; }
+            set
+            {
+                barcodeTextReadonlyBool = value;
+                OnPropertyChanged(nameof(BarcodeTextReadonlyBool));
+            }
+        }
 
         public List<Tuple<BarcodeFormat, string>> BarcodeFormats
         {
@@ -66,7 +90,7 @@ namespace BarCode
             }
         }
 
-        public int BarcodeLength
+        public string BarcodeLength
         {
             get { return barcodeLength; }
             set
@@ -83,6 +107,24 @@ namespace BarCode
             {
                 selectedBarcode = value;
                 OnPropertyChanged(nameof(SelectedBarcode));
+                if (SelectedBarcode == BarcodeFormat.EAN_13)
+                {
+                    if (RandomCheckBoxBool == true)
+                    {
+                        BarcodeLengthReadonlyBool = true;
+                        BarcodeLength = "체크섬 포함 13자리 자동 생성";
+                    }
+                    else if (RandomCheckBoxBool == false)
+                    {
+                        BarcodeLengthReadonlyBool = true;
+                        BarcodeLength = "체크섬을 제외한 12자리 기입";
+                    }
+                }
+                else
+                {
+                    BarcodeLengthReadonlyBool = false;
+                    BarcodeLength = "1";
+                }
             }
         }
 
@@ -96,7 +138,43 @@ namespace BarCode
             }
         }
 
-       
+        public string BarcodeText
+        {
+            get { return barcodeText; }
+            set
+            {
+                barcodeText = value;
+                OnPropertyChanged(nameof(BarcodeText));
+            }
+        }
+
+        public bool RandomCheckBoxBool
+        {
+            get { return randomCheckBoxBool; }
+            set
+            {
+                randomCheckBoxBool = value;
+                if (value == true)
+                {
+                    BarcodeText = null;
+                    BarcodeTextReadonlyBool = true;
+                    if (SelectedBarcode == BarcodeFormat.EAN_13)
+                    {
+                        BarcodeLength = "체크섬 포함 13자리 자동 생성";
+                        BarcodeLengthReadonlyBool = true;
+                    }
+                }
+                else if (value == false)
+                {
+                    BarcodeTextReadonlyBool = false;
+                    if (SelectedBarcode == BarcodeFormat.EAN_13)
+                    {
+                        BarcodeLength = "체크섬을 제외한 12자리 기입";
+                        BarcodeLengthReadonlyBool = true;
+                    }
+                }
+            }
+        }
 
         public MainViewModel()
         {
@@ -107,19 +185,38 @@ namespace BarCode
         public ICommand ButtonClk { protected get; set; }
         public ICommand StopTimer { protected get; set; }
 
-        public void aa(int length)
+        public void aa(string length)
         {
-            string rnd = rs.rnd(length);
             model md = new model();
-            BitmapImage qrcode = bc.GenBarCode(rnd, SelectedBarcode);
-            md.Bitimg = qrcode;
-            md.BarCodeText = rnd;
-            BarCodeList.Add(md);
+            if (RandomCheckBoxBool == true)
+            {
+                if (selectedBarcode == BarcodeFormat.EAN_13)
+                {
+                    Tuple<BitmapImage, string> qrcode = bc.GenBarCode(rs.rnd(12), SelectedBarcode);
+                    md.Bitimg = qrcode.Item1;
+                    md.BarCodeText = qrcode.Item2;
+                    BarCodeList.Add(md);
+                }
+                else
+                {
+                    Tuple<BitmapImage, string> qrcode = bc.GenBarCode(rs.rnd(Convert.ToInt32(length)), SelectedBarcode);
+                    md.Bitimg = qrcode.Item1;
+                    md.BarCodeText = qrcode.Item2;
+                    BarCodeList.Add(md);
+                }
+            }
+            else if (RandomCheckBoxBool == false)
+            {
+                Tuple<BitmapImage, string> qrcode = bc.GenBarCode(BarcodeText, SelectedBarcode);
+                md.Bitimg = qrcode.Item1;
+                md.BarCodeText = qrcode.Item2;
+                BarCodeList.Add(md);
+            }
         }
 
         public void timer_Tick(object sender, EventArgs e)
         {
-           aa(BarcodeLength);
+            aa(BarcodeLength);
         }
     }
 
@@ -142,12 +239,13 @@ namespace BarCode
         public void Execute(object parameter)
         {
             viewModel.OnPropertyChanged(nameof(viewModel.TimerDouble));
-            viewModel.timer.Interval = TimeSpan.FromMilliseconds((double)parameter);
+            viewModel.timer.Interval = TimeSpan.FromMilliseconds((double)parameter * 1000);
             viewModel.timer.Tick += new EventHandler(viewModel.timer_Tick);
             viewModel.timer.Start();
-        }
+            viewModel.BarcodeLengthReadonlyBool = true;
+            viewModel.BarcodeTextReadonlyBool = true;
 
-        
+        }
     }
 
     internal class StopTimer : ICommand
@@ -169,7 +267,26 @@ namespace BarCode
         public void Execute(object parameter)
         {
             viewModel.timer.Tick -= new EventHandler(viewModel.timer_Tick);
-            viewModel.timer.Stop();            
+            viewModel.timer.Stop();
+            if (viewModel.RandomCheckBoxBool == false)
+            {
+                viewModel.BarcodeTextReadonlyBool = false;
+                if (viewModel.SelectedBarcode == BarcodeFormat.EAN_13)
+                {
+                    viewModel.BarcodeLengthReadonlyBool = true;
+                }
+                else
+                {
+                    viewModel.BarcodeLengthReadonlyBool = false;
+                }
+            }
+            else if (viewModel.RandomCheckBoxBool == true)
+            {
+                if (viewModel.SelectedBarcode != BarcodeFormat.EAN_13)
+                {
+                    viewModel.BarcodeLengthReadonlyBool = false;
+                }
+            }
         }
     }
 }

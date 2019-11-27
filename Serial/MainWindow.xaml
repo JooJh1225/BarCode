@@ -11,21 +11,26 @@
     </Window.Resources>
     <Grid>
         <StackPanel Orientation="Horizontal">
-            <StackPanel Width="70">
-                <Button Content="start" Width="70" Height="20" Command="{Binding ButtonClk}" CommandParameter="{Binding TimerDouble}" HorizontalAlignment="Left" />
-                <local:TimerSet Width="70" HorizontalAlignment="Left"/>
-                <Button Content="stop" Width="70" Height="20" Command="{Binding StopTimer}" HorizontalAlignment="Left"/>
-                <TextBox Text="{Binding BarcodeLength, UpdateSourceTrigger=PropertyChanged}" Height="20"/>
+            <StackPanel Width="90">
+                <Button Content="start" Width="90" Height="20" Command="{Binding ButtonClk}" CommandParameter="{Binding TimerDouble}" HorizontalAlignment="Left" />
+                <local:TimerSet Width="90" HorizontalAlignment="Left"/>
+                <Button Content="stop" Width="90" Height="20" Command="{Binding StopTimer}" HorizontalAlignment="Left"/>
+                <TextBox Text="{Binding BarcodeLength, UpdateSourceTrigger=PropertyChanged}" Height="20"  IsReadOnly="{Binding BarcodeLengthReadonlyBool, UpdateSourceTrigger=PropertyChanged}" />
                 <ComboBox ItemsSource="{Binding BarcodeFormats}" DisplayMemberPath="Item2" FontSize="11" SelectedValue="{Binding SelectedBarcode}" SelectedValuePath="Item1"/>
+                <TextBox Text="{Binding BarcodeText, UpdateSourceTrigger=PropertyChanged}" FontSize="11" IsReadOnly="{Binding BarcodeTextReadonlyBool, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
             <StackPanel Width="70">
                 <Label Height="20"/>
-                <TextBlock Height="20" Text="반복 주기(ms)" FontSize="10" TextAlignment="Center"/>
+                <TextBlock Height="20" Text="반복 주기(초)" FontSize="10" TextAlignment="Center"/>
                 <Label Height="20"/>
                 <TextBlock Text="바코드 길이" FontSize="10" TextAlignment="Center" Height="20"/>
-                <TextBlock Height="20" Text="바코드 타입" FontSize="10" TextAlignment="Center"/>
+                <StackPanel Orientation="Horizontal">
+                    
+                    <TextBlock Height="20" Text="바코드 타입" FontSize="10" TextAlignment="Center"/>                    
+                </StackPanel>               
+                <CheckBox Content="랜덤생성" HorizontalAlignment="Center"  FontSize="10" FontWeight="Light" IsChecked="{Binding RandomCheckBoxBool}" />
             </StackPanel>
-            <local:MyDataGrid/>
+            <local:MyDataGrid  Width="400"/>
         </StackPanel>
     </Grid>
 </Window>

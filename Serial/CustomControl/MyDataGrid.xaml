@@ -4,11 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BarCode"
-             mc:Ignorable="d" Width="765" Height="456">
+             mc:Ignorable="d" Width="400" Height="455">
     <Grid>
-        <DataGrid Name="aa" Height="455" Width="765" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding BarCodeList}" AutoGenerateColumns="False" CanUserAddRows="False" HorizontalScrollBarVisibility="Hidden" Margin="1,1,-1,-56" >
+        <DataGrid Name="aa" Height="455" Width="400" HorizontalAlignment="Left" VerticalAlignment="Top" ItemsSource="{Binding BarCodeList}" AutoGenerateColumns="False" CanUserAddRows="False" HorizontalScrollBarVisibility="Hidden" Margin="1,1,-1,-56" >
             <DataGrid.Columns>
-                <DataGridTemplateColumn Header="BarCode" Width="500">
+                <DataGridTemplateColumn Header="BarCode" Width="300">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Image Source="{Binding Bitimg}" />
